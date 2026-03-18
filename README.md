@@ -47,8 +47,9 @@ Claude Code → MaxRefMCP（調べる・学ぶ・設計する）
 |--------|------|
 | `maxref.analytics` | API利用状況サマリー（ツール別呼び出し数・応答時間・人気クエリ・日別推移） |
 
-**ダッシュボード**: サーバー起動後 `http://localhost:8000/` にアクセスすると、
-ビジュアルダッシュボードで利用状況をリアルタイム確認できます。
+**ダッシュボード**: サーバーのルートURLにアクセスするとビジュアルダッシュボードで利用状況を確認できます。
+- ローカル: `http://localhost:8000/`
+- 本番: `https://maxrefmcp-production.up.railway.app/`
 
 **API エンドポイント:**
 - `GET /analytics/summary?days=30` — 集計サマリー（JSON）
@@ -105,7 +106,7 @@ python core.py
 {
   "mcpServers": {
     "max-ref": {
-      "url": "https://<your-app>.up.railway.app/mcp"
+      "url": "https://maxrefmcp-production.up.railway.app/mcp"
     }
   }
 }
