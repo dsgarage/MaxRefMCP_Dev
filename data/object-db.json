@@ -2095,6 +2095,25 @@
     "rnbo_compatible": false,
     "size": {"width": 200, "height": 100}
   },
+  "rnbo.move": {
+    "domain": "rnbo",
+    "category": "rnbo",
+    "description": "RNBO Move Takeover - Transform Ableton Move into a fully customized instrument with RNBO patching",
+    "description_ja": "RNBO Move Takeover — Ableton MoveをRNBOパッチで完全カスタマイズ可能な楽器に変換。32パッド・8エンコーダー・RGB LED・ディスプレイにフルアクセス",
+    "inlets": [
+      {"type": "signal/message", "description": "Stereo audio input + MIDI input"}
+    ],
+    "outlets": [
+      {"type": "signal/message", "description": "Stereo audio output + MIDI output"}
+    ],
+    "related": ["rnbo~", "gen~"],
+    "tags": ["RNBO", "Move", "Ableton", "hardware", "export", "takeover", "pads", "encoders", "standalone"],
+    "tags_ja": ["RNBO", "Move", "Ableton", "ハードウェア", "エクスポート", "テイクオーバー", "パッド", "エンコーダー", "スタンドアロン"],
+    "rnbo_compatible": true,
+    "notes": "Requirements: Move firmware 1.5.1+, Max with RNBO package. Launch: Shift+Step2 → Settings → RNBO. Status: Public Beta. Uses same infrastructure as Raspberry Pi export (RNBO OSCQuery Runner). Supports multiple RNBO exports running simultaneously via web editor.",
+    "notes_ja": "要件: Moveファームウェア1.5.1以上、RNBO パッケージ入りMax。起動: Shift+Step2 → 設定 → RNBO。ステータス: パブリックベータ。Raspberry Piエクスポートと同じインフラ（RNBO OSCQuery Runner）を使用。Webエディタ経由で複数のRNBOエクスポートを同時実行可能。",
+    "size": {"width": 80, "height": 22}
+  },
   "rnbo~": {
     "domain": "rnbo",
     "category": "rnbo",
@@ -2106,9 +2125,9 @@
     "outlets": [
       {"type": "signal/message", "description": "Audio and data outputs (configurable)"}
     ],
-    "related": ["poly~", "gen~"],
-    "tags": ["RNBO", "export", "codegen", "C++", "web", "hardware"],
-    "tags_ja": ["RNBO", "エクスポート", "コード生成", "C++", "Web", "ハードウェア"],
+    "related": ["poly~", "gen~", "rnbo.move"],
+    "tags": ["RNBO", "export", "codegen", "C++", "web", "hardware", "Move", "move", "takeover"],
+    "tags_ja": ["RNBO", "エクスポート", "コード生成", "C++", "Web", "ハードウェア", "Move", "テイクオーバー"],
     "rnbo_compatible": true,
     "size": {"width": 80, "height": 22}
   },

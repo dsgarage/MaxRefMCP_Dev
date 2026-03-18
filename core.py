@@ -21,6 +21,7 @@ from search import (
 )
 from github_issues import create_bug_report, create_feature_request
 from analytics import track, get_summary, get_recent_calls
+from news import fetch_official_news, fetch_rnbo_news, fetch_article_detail
 
 mcp = FastMCP(
     "Max/MSP Reference",
@@ -218,6 +219,42 @@ def request_feature(
         use_case=use_case,
         target_repo=target_repo,
     )
+
+
+# --- 公式ニュース ---
+
+
+@mcp.tool(name="maxref.official_news")
+@track("maxref.official_news")
+def official_news(max_results: int = 5) -> dict:
+    """Cycling '74 公式サイトから最新の記事・ニュースを取得。新機能、アップデート、コミュニティ情報を確認できる。
+
+    Args:
+        max_results: 取得する記事数（デフォルト5）
+    """
+    return fetch_official_news(max_results=max_results)
+
+
+@mcp.tool(name="maxref.rnbo_news")
+@track("maxref.rnbo_news")
+def rnbo_news(max_results: int = 5) -> dict:
+    """RNBO 関連の最新情報を取得。Move Takeover、エクスポートターゲット、新機能などの最新動向を確認。
+
+    Args:
+        max_results: 取得するセクション数（デフォルト5）
+    """
+    return fetch_rnbo_news(max_results=max_results)
+
+
+@mcp.tool(name="maxref.read_article")
+@track("maxref.read_article")
+def read_article(url: str) -> dict:
+    """Cycling '74 公式サイトの記事を読み込み、内容を取得する。maxref.official_news で取得した記事URLを指定して詳細を確認。
+
+    Args:
+        url: cycling74.com の記事URL
+    """
+    return fetch_article_detail(url)
 
 
 # --- アナリティクス ---
