@@ -18,6 +18,7 @@ from search import (
     explain_connection_detail,
     check_rnbo_compatibility,
 )
+from github_issues import create_bug_report, create_feature_request
 
 mcp = FastMCP(
     "Max/MSP Reference",
@@ -143,6 +144,58 @@ def rnbo_compatibility(objects: list[str]) -> dict:
         objects: チェックするオブジェクト名のリスト（例: ["cycle~", "groove~", "js"]）
     """
     return check_rnbo_compatibility(objects)
+
+
+@mcp.tool(name="maxref.report_bug")
+def report_bug(
+    title: str,
+    description: str,
+    steps_to_reproduce: str | None = None,
+    expected: str | None = None,
+    actual: str | None = None,
+    target_repo: str | None = None,
+) -> dict:
+    """MaxMCP / MaxRefMCP のバグを報告してGitHub Issueを自動作成。内容に基づいて適切なリポジトリに自動振り分け。パッチ構築・操作系のバグはMaxMCPへ、リファレンス・検索系のバグはMaxRefMCPへ振り分けられる。
+
+    Args:
+        title: バグの概要（例: "cycle~ の検索結果にsaw~が含まれない"）
+        description: バグの詳細説明
+        steps_to_reproduce: 再現手順（任意）
+        expected: 期待される動作（任意）
+        actual: 実際の動作（任意）
+        target_repo: 振り分け先を明示指定する場合（"maxmcp" または "maxrefmcp"。省略時は自動判定）
+    """
+    return create_bug_report(
+        title=title,
+        description=description,
+        steps_to_reproduce=steps_to_reproduce,
+        expected=expected,
+        actual=actual,
+        target_repo=target_repo,
+    )
+
+
+@mcp.tool(name="maxref.request_feature")
+def request_feature(
+    title: str,
+    description: str,
+    use_case: str | None = None,
+    target_repo: str | None = None,
+) -> dict:
+    """MaxMCP / MaxRefMCP への機能追加リクエストをGitHub Issueとして自動作成。内容に基づいて適切なリポジトリに自動振り分け。パッチ構築・操作系はMaxMCPへ、リファレンス・検索系はMaxRefMCPへ振り分けられる。
+
+    Args:
+        title: 機能の概要（例: "グリッチエフェクトのパターンを追加してほしい"）
+        description: 機能の詳細説明
+        use_case: ユースケース・利用場面（任意）
+        target_repo: 振り分け先を明示指定する場合（"maxmcp" または "maxrefmcp"。省略時は自動判定）
+    """
+    return create_feature_request(
+        title=title,
+        description=description,
+        use_case=use_case,
+        target_repo=target_repo,
+    )
 
 
 if __name__ == "__main__":

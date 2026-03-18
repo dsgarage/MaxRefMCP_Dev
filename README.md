@@ -31,6 +31,16 @@ Claude Code → MaxRefMCP（調べる・学ぶ・設計する）
 | `maxref.explain_connection` | 接続方法解説（型互換性・推奨接続の判定） |
 | `maxref.rnbo_compatibility` | RNBO互換チェック（非対応時は代替提案） |
 
+### フィードバック（2ツール）
+
+| ツール | 説明 |
+|--------|------|
+| `maxref.report_bug` | バグ報告 → GitHub Issue を自動作成（MaxMCP / MaxRefMCP に自動振り分け） |
+| `maxref.request_feature` | 機能追加リクエスト → GitHub Issue を自動作成（自動振り分け） |
+
+> フィードバックツールの利用には環境変数 `GITHUB_TOKEN` の設定が必要です。
+> 未設定の場合は手動作成用の URL が返されます。
+
 ---
 
 ## MaxMCP との使い分け
