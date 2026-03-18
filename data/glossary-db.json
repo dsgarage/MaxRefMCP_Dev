@@ -1,0 +1,290 @@
+{
+  "signal": {
+    "ja": "シグナル",
+    "description": "Audio-rate data stream in MSP, processed at sample rate (typically 44100 or 48000 Hz). Signal connections are shown as striped patch cords.",
+    "description_ja": "MSPにおけるオーディオレートのデータストリーム。サンプルレート（通常44100/48000Hz）で処理される。シグナル接続は縞模様のパッチコードで表示。",
+    "aliases": ["audio signal", "オーディオシグナル"],
+    "related": ["message", "sample rate"],
+    "category": "core"
+  },
+  "message": {
+    "ja": "メッセージ",
+    "description": "Event-driven data in Max. Messages are sent when triggered, not continuously like signals. Includes bang, int, float, list, symbol.",
+    "description_ja": "Maxにおけるイベント駆動型データ。シグナルと異なり、トリガー時のみ送信される。bang、int、float、list、symbolなどの型がある。",
+    "aliases": ["メッセージデータ", "event"],
+    "related": ["signal", "bang"],
+    "category": "core"
+  },
+  "bang": {
+    "ja": "バン",
+    "description": "The most basic message type in Max. Triggers an action without carrying data. Like pressing a button.",
+    "description_ja": "Maxの最も基本的なメッセージ型。データを持たず、アクションをトリガーする。ボタンを押すようなもの。",
+    "aliases": ["バング"],
+    "related": ["message", "trigger"],
+    "category": "core"
+  },
+  "patch cord": {
+    "ja": "パッチコード",
+    "description": "Visual connection between object inlets and outlets. Yellow = message, striped = signal (audio).",
+    "description_ja": "オブジェクトのインレットとアウトレットをつなぐ視覚的な接続線。黄色=メッセージ、縞模様=シグナル（オーディオ）。",
+    "aliases": ["cable", "wire", "ケーブル", "接続線"],
+    "related": ["inlet", "outlet"],
+    "category": "core"
+  },
+  "inlet": {
+    "ja": "インレット",
+    "description": "Input port on the top of a Max object. Receives messages or signals from other objects.",
+    "description_ja": "Maxオブジェクト上部の入力ポート。他のオブジェクトからメッセージやシグナルを受信する。",
+    "aliases": ["入力", "input"],
+    "related": ["outlet", "patch cord"],
+    "category": "core"
+  },
+  "outlet": {
+    "ja": "アウトレット",
+    "description": "Output port on the bottom of a Max object. Sends messages or signals to other objects.",
+    "description_ja": "Maxオブジェクト下部の出力ポート。他のオブジェクトにメッセージやシグナルを送信する。",
+    "aliases": ["出力", "output"],
+    "related": ["inlet", "patch cord"],
+    "category": "core"
+  },
+  "patcher": {
+    "ja": "パッチャー",
+    "description": "A Max document/window containing objects and connections. Also called a patch. Can be nested as subpatchers.",
+    "description_ja": "オブジェクトと接続を含むMaxのドキュメント/ウィンドウ。パッチとも呼ばれる。サブパッチャーとしてネスト可能。",
+    "aliases": ["patch", "パッチ"],
+    "related": ["subpatcher", "bpatcher"],
+    "category": "core"
+  },
+  "subpatcher": {
+    "ja": "サブパッチャー",
+    "description": "A patcher embedded inside another patcher using [p] or [patcher]. Helps organize complex patches.",
+    "description_ja": "[p]または[patcher]で別パッチャー内に埋め込まれたパッチャー。複雑なパッチの整理に役立つ。",
+    "aliases": ["サブパッチ", "sub-patch"],
+    "related": ["patcher", "bpatcher", "encapsulation"],
+    "category": "core"
+  },
+  "abstraction": {
+    "ja": "アブストラクション",
+    "description": "A saved patcher file used as a reusable component in other patches. Like a function in programming.",
+    "description_ja": "保存されたパッチャーファイルを他のパッチで再利用可能なコンポーネントとして使用。プログラミングの関数に相当。",
+    "aliases": ["抽象化"],
+    "related": ["subpatcher", "bpatcher", "encapsulation"],
+    "category": "core"
+  },
+  "msp": {
+    "ja": "MSP",
+    "description": "Max Signal Processing — the audio processing part of Max. Objects ending with ~ are MSP objects.",
+    "description_ja": "Max Signal Processing — Maxのオーディオ処理部分。~で終わるオブジェクトがMSPオブジェクト。",
+    "aliases": ["Max Signal Processing"],
+    "related": ["max", "jitter", "signal"],
+    "category": "domain"
+  },
+  "jitter": {
+    "ja": "ジッター",
+    "description": "The video/matrix/3D processing part of Max. Objects starting with jit. are Jitter objects.",
+    "description_ja": "Maxのビデオ/マトリックス/3D処理部分。jit.で始まるオブジェクトがJitterオブジェクト。",
+    "aliases": ["Jitter"],
+    "related": ["max", "msp", "opengl"],
+    "category": "domain"
+  },
+  "max for live": {
+    "ja": "マックスフォーライブ",
+    "description": "Integration of Max into Ableton Live. Create custom audio effects, instruments, and MIDI devices.",
+    "description_ja": "MaxをAbleton Liveに統合するフレームワーク。カスタムオーディオエフェクト、楽器、MIDIデバイスを作成可能。",
+    "aliases": ["M4L", "Max4Live", "マックスフォーライヴ"],
+    "related": ["live api", "live object model"],
+    "category": "domain"
+  },
+  "sample rate": {
+    "ja": "サンプルレート",
+    "description": "Number of audio samples per second. Standard rates: 44100 Hz (CD), 48000 Hz (video/pro). Higher = better quality but more CPU.",
+    "description_ja": "1秒あたりのオーディオサンプル数。標準: 44100Hz（CD）、48000Hz（映像/プロ）。高いほど高品質だがCPU負荷増。",
+    "aliases": ["sampling rate", "サンプリングレート", "SR"],
+    "related": ["signal", "nyquist"],
+    "category": "audio"
+  },
+  "buffer": {
+    "ja": "バッファ",
+    "description": "Memory storage for audio samples in MSP. Used by buffer~ object. Enables sample playback, recording, and manipulation.",
+    "description_ja": "MSPにおけるオーディオサンプルのメモリ格納領域。buffer~オブジェクトが管理。サンプル再生、録音、加工に使用。",
+    "aliases": ["バッファー", "audio buffer"],
+    "related": ["buffer~", "groove~", "play~"],
+    "category": "audio"
+  },
+  "envelope": {
+    "ja": "エンベロープ",
+    "description": "Shape that controls how a parameter changes over time. ADSR (Attack, Decay, Sustain, Release) is the most common type.",
+    "description_ja": "パラメーターの時間変化を制御する形状。ADSR（アタック、ディケイ、サスティン、リリース）が最も一般的。",
+    "aliases": ["エンヴェロープ", "ADSR", "包絡線"],
+    "related": ["adsr~", "function", "line~"],
+    "category": "audio"
+  },
+  "oscillator": {
+    "ja": "オシレーター",
+    "description": "Object that generates a repeating waveform. Basic types: sine (cycle~), saw (saw~), square (rect~), triangle (tri~).",
+    "description_ja": "繰り返し波形を生成するオブジェクト。基本型: サイン波(cycle~)、ノコギリ波(saw~)、矩形波(rect~)、三角波(tri~)。",
+    "aliases": ["発振器", "OSC"],
+    "related": ["cycle~", "saw~", "rect~", "phasor~"],
+    "category": "audio"
+  },
+  "filter": {
+    "ja": "フィルター",
+    "description": "Removes or emphasizes certain frequencies. Types: lowpass, highpass, bandpass, notch. Common objects: lores~, svf~, biquad~.",
+    "description_ja": "特定の周波数を除去または強調する。種類: ローパス、ハイパス、バンドパス、ノッチ。代表的オブジェクト: lores~, svf~, biquad~。",
+    "aliases": ["フィルタ"],
+    "related": ["lores~", "svf~", "biquad~", "reson~"],
+    "category": "audio"
+  },
+  "lfo": {
+    "ja": "LFO",
+    "description": "Low Frequency Oscillator — a slow oscillator (typically 0.1-20 Hz) used to modulate parameters like pitch, volume, or filter cutoff.",
+    "description_ja": "低周波オシレーター。通常0.1〜20Hzの遅い周波数で、ピッチ、音量、フィルターカットオフ等のパラメーターを変調するために使用。",
+    "aliases": ["低周波オシレーター", "Low Frequency Oscillator"],
+    "related": ["cycle~", "modulation"],
+    "category": "audio"
+  },
+  "modulation": {
+    "ja": "モジュレーション",
+    "description": "Using one signal to control a parameter of another. Types: AM (amplitude), FM (frequency), ring modulation.",
+    "description_ja": "あるシグナルで別のパラメーターを制御すること。種類: AM（振幅変調）、FM（周波数変調）、リング変調。",
+    "aliases": ["変調"],
+    "related": ["lfo", "fm synth"],
+    "category": "audio"
+  },
+  "fft": {
+    "ja": "FFT",
+    "description": "Fast Fourier Transform — converts audio from time domain to frequency domain. Used for spectral analysis and processing.",
+    "description_ja": "高速フーリエ変換。オーディオを時間領域から周波数領域に変換。スペクトル解析・処理に使用。",
+    "aliases": ["高速フーリエ変換", "Fast Fourier Transform"],
+    "related": ["fft~", "pfft~", "spectroscope~"],
+    "category": "audio"
+  },
+  "midi": {
+    "ja": "MIDI",
+    "description": "Musical Instrument Digital Interface — protocol for sending musical data (notes, controllers, program changes) between devices.",
+    "description_ja": "楽器デジタルインターフェース。デバイス間で音楽データ（ノート、コントローラー、プログラムチェンジ）を送受信するプロトコル。",
+    "aliases": ["ミディ", "Musical Instrument Digital Interface"],
+    "related": ["notein", "ctlin", "noteout"],
+    "category": "protocol"
+  },
+  "osc": {
+    "ja": "OSC",
+    "description": "Open Sound Control — network protocol for communication between multimedia devices. More flexible than MIDI.",
+    "description_ja": "Open Sound Control。マルチメディアデバイス間のネットワーク通信プロトコル。MIDIより柔軟。",
+    "aliases": ["Open Sound Control"],
+    "related": ["udpsend", "udpreceive"],
+    "category": "protocol"
+  },
+  "poly~": {
+    "ja": "ポリ",
+    "description": "Object for polyphonic voice management. Loads a patcher and creates multiple instances for polyphonic synthesis.",
+    "description_ja": "ポリフォニック・ボイス管理オブジェクト。パッチャーを読み込み、複数インスタンスを作成してポリフォニック合成を実現。",
+    "aliases": ["polyphony", "ポリフォニー"],
+    "related": ["thispoly~", "voice allocation"],
+    "category": "object"
+  },
+  "gen~": {
+    "ja": "ジェン",
+    "description": "Sample-level audio processing environment. Write custom DSP at the sample level with visual patching or GenExpr code.",
+    "description_ja": "サンプルレベルのオーディオ処理環境。ビジュアルパッチングまたはGenExprコードでカスタムDSPをサンプルレベルで記述。",
+    "aliases": ["Gen"],
+    "related": ["codebox", "rnbo~"],
+    "category": "object"
+  },
+  "rnbo": {
+    "ja": "RNBO",
+    "description": "Export Max patches to standalone applications, VST/AU plugins, or web audio. Compiles to C++ for high performance.",
+    "description_ja": "Maxパッチをスタンドアロンアプリ、VST/AUプラグイン、Webオーディオにエクスポート。C++にコンパイルされ高性能。",
+    "aliases": ["RNBO~"],
+    "related": ["gen~", "codebox"],
+    "category": "object"
+  },
+  "opengl": {
+    "ja": "OpenGL",
+    "description": "3D graphics API used by Jitter for GPU-accelerated rendering. Objects: jit.gl.render, jit.gl.gridshape, jit.gl.mesh, etc.",
+    "description_ja": "JitterがGPUアクセラレーテッドレンダリングに使用する3DグラフィックスAPI。jit.gl.render, jit.gl.gridshape等。",
+    "aliases": ["GL"],
+    "related": ["jitter", "jit.gl.render"],
+    "category": "graphics"
+  },
+  "matrix": {
+    "ja": "マトリックス",
+    "description": "Multi-dimensional array of data used in Jitter. A jit.matrix stores pixels, vertices, or any grid-based data.",
+    "description_ja": "Jitterで使用される多次元データ配列。jit.matrixはピクセル、頂点、グリッドベースのデータを格納。",
+    "aliases": ["マトリクス", "jit.matrix"],
+    "related": ["jitter", "jit.matrix"],
+    "category": "graphics"
+  },
+  "dsp": {
+    "ja": "DSP",
+    "description": "Digital Signal Processing — the mathematical processing of audio signals. In Max, DSP is handled by the MSP engine.",
+    "description_ja": "デジタル信号処理。オーディオ信号の数学的処理。MaxではMSPエンジンが担当。",
+    "aliases": ["Digital Signal Processing", "デジタル信号処理"],
+    "related": ["msp", "signal"],
+    "category": "audio"
+  },
+  "hot inlet": {
+    "ja": "ホットインレット",
+    "description": "The leftmost inlet of most Max objects. Receiving a message here triggers output. Other inlets are 'cold' (store but don't trigger).",
+    "description_ja": "多くのMaxオブジェクトの最左インレット。ここにメッセージを受信すると出力がトリガーされる。他のインレットは'コールド'（値を保持するが出力しない）。",
+    "aliases": ["ホット入力"],
+    "related": ["cold inlet", "inlet", "trigger"],
+    "category": "core"
+  },
+  "cold inlet": {
+    "ja": "コールドインレット",
+    "description": "Non-leftmost inlets that store values but don't trigger output. Values are used when the hot inlet is triggered.",
+    "description_ja": "左端以外のインレット。値を保持するが出力はトリガーしない。ホットインレットがトリガーされた時に値が使用される。",
+    "aliases": ["コールド入力"],
+    "related": ["hot inlet", "inlet"],
+    "category": "core"
+  },
+  "right-to-left order": {
+    "ja": "右から左の順序",
+    "description": "Max processes outlets right-to-left. Important for understanding execution order when an object has multiple outlets.",
+    "description_ja": "Maxはアウトレットを右から左の順に処理する。複数アウトレットを持つオブジェクトの実行順序を理解する上で重要。",
+    "aliases": ["実行順序", "execution order", "outlet order"],
+    "related": ["trigger", "outlet"],
+    "category": "core"
+  },
+  "loadbang": {
+    "ja": "ロードバン",
+    "description": "Sends a bang when the patch is loaded/opened. Used to initialize values and settings automatically.",
+    "description_ja": "パッチが読み込まれた時にbangを送信。値や設定を自動的に初期化するために使用。",
+    "aliases": ["ロードバング"],
+    "related": ["bang", "closebang"],
+    "category": "object"
+  },
+  "encapsulation": {
+    "ja": "カプセル化",
+    "description": "Organizing patch sections into subpatchers or abstractions. Select objects → Edit → Encapsulate (or Cmd+Shift+E).",
+    "description_ja": "パッチの一部をサブパッチャーやアブストラクションにまとめること。オブジェクト選択→Edit→Encapsulate（またはCmd+Shift+E）。",
+    "aliases": ["エンカプセレーション"],
+    "related": ["subpatcher", "abstraction"],
+    "category": "workflow"
+  },
+  "presentation mode": {
+    "ja": "プレゼンテーションモード",
+    "description": "Alternate view of a patch showing only UI elements. Toggle with Alt+Cmd+E. Used to create clean user interfaces.",
+    "description_ja": "UIエレメントのみを表示するパッチの代替ビュー。Alt+Cmd+Eで切り替え。クリーンなユーザーインターフェース作成に使用。",
+    "aliases": ["プレゼンモード"],
+    "related": ["patcher"],
+    "category": "workflow"
+  },
+  "live api": {
+    "ja": "Live API",
+    "description": "API for controlling Ableton Live from Max for Live. Access tracks, clips, devices, and parameters programmatically.",
+    "description_ja": "Max for LiveからAbleton Liveを制御するAPI。トラック、クリップ、デバイス、パラメーターにプログラムでアクセス。",
+    "aliases": ["LOM", "Live Object Model"],
+    "related": ["max for live", "live.path", "live.object"],
+    "category": "m4l"
+  },
+  "freeze": {
+    "ja": "フリーズ",
+    "description": "In Max for Live, freezing a device bundles all dependencies (abstractions, media) into the .amxd file for sharing.",
+    "description_ja": "Max for Liveでデバイスをフリーズすると、すべての依存ファイル（アブストラクション、メディア）が.amxdファイルにバンドルされ共有可能に。",
+    "aliases": ["フリーズ機能"],
+    "related": ["max for live"],
+    "category": "m4l"
+  }
+}
