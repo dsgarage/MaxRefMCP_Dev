@@ -5,6 +5,7 @@ FastMCPを使用した Max/MSP・Max4Live リファレンスサーバー。
 """
 
 import os
+from pathlib import Path
 from fastmcp import FastMCP
 
 from search import (
@@ -19,6 +20,7 @@ from search import (
     check_rnbo_compatibility,
 )
 from github_issues import create_bug_report, create_feature_request
+from analytics import track, get_summary, get_recent_calls
 
 mcp = FastMCP(
     "Max/MSP Reference",
@@ -30,7 +32,11 @@ mcp = FastMCP(
 )
 
 
+# --- リファレンス検索 ---
+
+
 @mcp.tool(name="maxref.search_object")
+@track("maxref.search_object")
 def search_object(
     query: str,
     domain: str | None = None,
@@ -49,6 +55,7 @@ def search_object(
 
 
 @mcp.tool(name="maxref.get_object")
+@track("maxref.get_object")
 def get_object(name: str) -> dict:
     """Max/MSPオブジェクトの詳細リファレンスを取得。インレット/アウトレットの型・意味、関連オブジェクト、使用例を含む完全な仕様書。設計判断の根拠として参照。
 
@@ -62,6 +69,7 @@ def get_object(name: str) -> dict:
 
 
 @mcp.tool(name="maxref.search_pattern")
+@track("maxref.search_pattern")
 def search_pattern(
     query: str,
     domain: str | None = None,
@@ -78,6 +86,7 @@ def search_pattern(
 
 
 @mcp.tool(name="maxref.search_package")
+@track("maxref.search_package")
 def search_package(query: str, max_results: int = 5) -> dict:
     """Max/MSPの外部パッケージ・ライブラリのリファレンスを検索。機能比較、対応バージョンなど選定に必要な情報を提供。
 
@@ -89,6 +98,7 @@ def search_package(query: str, max_results: int = 5) -> dict:
 
 
 @mcp.tool(name="maxref.glossary")
+@track("maxref.glossary")
 def glossary(term: str) -> dict:
     """Max/MSP関連用語の日英対応辞書。DSP、シグナルフロー、Max固有の概念を初学者にもわかりやすく解説。
 
@@ -101,7 +111,11 @@ def glossary(term: str) -> dict:
     return result
 
 
+# --- 設計相談 ---
+
+
 @mcp.tool(name="maxref.compare_objects")
+@track("maxref.compare_objects")
 def compare_objects(objects: list[str]) -> dict:
     """2つ以上のMax/MSPオブジェクトを比較。用途の違い、インレット/アウトレット構成、ドメイン、RNBO互換性などを並べて解説。設計時のオブジェクト選定に使用。
 
@@ -112,6 +126,7 @@ def compare_objects(objects: list[str]) -> dict:
 
 
 @mcp.tool(name="maxref.suggest_approach")
+@track("maxref.suggest_approach")
 def suggest_approach(
     goal: str,
     constraints: list[str] | None = None,
@@ -126,6 +141,7 @@ def suggest_approach(
 
 
 @mcp.tool(name="maxref.explain_connection")
+@track("maxref.explain_connection")
 def explain_connection(source: str, destination: str) -> dict:
     """2つのオブジェクト間の接続方法と信号フローを解説。どのアウトレットからどのインレットに接続すべきか、型の互換性を確認。
 
@@ -137,6 +153,7 @@ def explain_connection(source: str, destination: str) -> dict:
 
 
 @mcp.tool(name="maxref.rnbo_compatibility")
+@track("maxref.rnbo_compatibility")
 def rnbo_compatibility(objects: list[str]) -> dict:
     """指定オブジェクトがRNBOに対応しているか確認。非対応の場合は代替オブジェクトを提案。RNBOエクスポート前の事前チェックに使用。
 
@@ -146,7 +163,11 @@ def rnbo_compatibility(objects: list[str]) -> dict:
     return check_rnbo_compatibility(objects)
 
 
+# --- フィードバック ---
+
+
 @mcp.tool(name="maxref.report_bug")
+@track("maxref.report_bug")
 def report_bug(
     title: str,
     description: str,
@@ -176,6 +197,7 @@ def report_bug(
 
 
 @mcp.tool(name="maxref.request_feature")
+@track("maxref.request_feature")
 def request_feature(
     title: str,
     description: str,
@@ -196,6 +218,49 @@ def request_feature(
         use_case=use_case,
         target_repo=target_repo,
     )
+
+
+# --- アナリティクス ---
+
+
+@mcp.tool(name="maxref.analytics")
+def analytics(days: int = 30) -> dict:
+    """MaxRefMCP の API 利用状況サマリーを取得。ツール別呼び出し数、応答時間、人気検索クエリ、日別推移などを返す。
+
+    Args:
+        days: 集計期間（日数。デフォルト30）
+    """
+    return get_summary(days)
+
+
+# --- ダッシュボード用 HTTP ルート ---
+
+from starlette.requests import Request
+from starlette.responses import HTMLResponse, JSONResponse
+from starlette.routing import Route
+
+DASHBOARD_HTML = (Path(__file__).parent / "dashboard.html").read_text(encoding="utf-8")
+
+
+async def _dashboard_view(request: Request) -> HTMLResponse:
+    return HTMLResponse(DASHBOARD_HTML)
+
+
+async def _analytics_summary(request: Request) -> JSONResponse:
+    days = int(request.query_params.get("days", 30))
+    return JSONResponse(get_summary(days))
+
+
+async def _analytics_recent(request: Request) -> JSONResponse:
+    limit = int(request.query_params.get("limit", 50))
+    return JSONResponse(get_recent_calls(limit))
+
+
+mcp._additional_http_routes.extend([
+    Route("/", _dashboard_view),
+    Route("/analytics/summary", _analytics_summary),
+    Route("/analytics/recent", _analytics_recent),
+])
 
 
 if __name__ == "__main__":
