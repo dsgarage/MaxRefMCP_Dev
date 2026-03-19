@@ -1,7 +1,7 @@
 """
-Max/MSP リファレンス MCP サーバー
-FastMCPを使用した Max/MSP・Max4Live リファレンスサーバー。
-初学者向けに日本語対応の自然言語検索・設計相談を提供。
+Max/MSP Reference MCP Server
+Max/MSP & Max4Live reference server powered by FastMCP.
+Provides bilingual (Japanese/English) object search, design consultation, and learning support.
 """
 
 import os
@@ -26,14 +26,17 @@ from news import fetch_official_news, fetch_rnbo_news, fetch_article_detail
 mcp = FastMCP(
     "Max/MSP Reference",
     instructions=(
-        "Max/MSP・Max4Live の日本語対応リファレンス・設計相談サーバーです。"
+        "Max/MSP & Max4Live bilingual (JA/EN) reference and design consultation server. "
+        "Provides object specs, patch design brainstorming, and learning support. "
+        "For actual patch building/manipulation, use MaxMCP (max.* tools).\n"
+        "Max/MSP・Max4Live の日英バイリンガル対応リファレンス・設計相談サーバーです。"
         "オブジェクト仕様の調査、パッチ設計の壁打ち、学習支援を提供します。"
         "パッチの実際の構築・操作にはMaxMCP（max.*ツール）を使用してください。"
     ),
 )
 
 
-# --- リファレンス検索 ---
+# --- Reference Search / リファレンス検索 ---
 
 
 @mcp.tool(name="maxref.search_object")
@@ -44,13 +47,14 @@ def search_object(
     category: str | None = None,
     max_results: int = 10,
 ) -> dict:
-    """Max/MSPオブジェクトのリファレンスを検索。インレット/アウトレット仕様、関連オブジェクト、使い方を調べたいときに使用。パッチを作る前の調査・学習向け。パッチ構築時のオブジェクト配置にはMaxMCPのmax.object.createを使用してください。
+    """Search Max/MSP object references by name or keyword. Returns inlet/outlet specs, related objects, and usage info. Use before building patches for research and learning. For placing objects in a patch, use MaxMCP's max.object.create.
+    Max/MSPオブジェクトのリファレンスを検索。インレット/アウトレット仕様、関連オブジェクト、使い方を調べたいときに使用。
 
     Args:
-        query: 検索キーワード（例: "cycle~", "オシレーター", "filter"）
-        domain: ドメインフィルター（"max", "msp", "jitter"）
-        category: カテゴリフィルター（"oscillator", "filter", "math" など）
-        max_results: 最大結果数（デフォルト10）
+        query: Search keyword / 検索キーワード (e.g. "cycle~", "oscillator", "filter")
+        domain: Domain filter / ドメインフィルター ("max", "msp", "jitter")
+        category: Category filter / カテゴリフィルター ("oscillator", "filter", "math", etc.)
+        max_results: Maximum number of results / 最大結果数 (default: 10)
     """
     return search_objects(query, domain=domain, category=category, max_results=max_results)
 
@@ -58,14 +62,15 @@ def search_object(
 @mcp.tool(name="maxref.get_object")
 @track("maxref.get_object")
 def get_object(name: str) -> dict:
-    """Max/MSPオブジェクトの詳細リファレンスを取得。インレット/アウトレットの型・意味、関連オブジェクト、使用例を含む完全な仕様書。設計判断の根拠として参照。
+    """Get detailed reference for a Max/MSP object. Returns complete specs including inlet/outlet types, related objects, and usage examples.
+    Max/MSPオブジェクトの詳細リファレンスを取得。インレット/アウトレットの型・意味、関連オブジェクト、使用例を含む完全な仕様書。
 
     Args:
-        name: オブジェクト名（例: "cycle~", "metro", "jit.gl.gridshape"）
+        name: Object name / オブジェクト名 (e.g. "cycle~", "metro", "jit.gl.gridshape")
     """
     result = get_object_detail(name)
     if result is None:
-        return {"error": f"オブジェクト '{name}' が見つかりません。maxref.search_object で検索してみてください。"}
+        return {"error": f"Object '{name}' not found. Try searching with maxref.search_object. / オブジェクト '{name}' が見つかりません。maxref.search_object で検索してみてください。"}
     return result
 
 
@@ -76,12 +81,13 @@ def search_pattern(
     domain: str | None = None,
     max_results: int = 5,
 ) -> dict:
-    """やりたいことからMax/MSPパッチの設計パターンを検索。使用オブジェクトと接続構成のテンプレートを返す。設計フェーズでの構成検討・壁打ちに使用。実際のパッチ構築にはMaxMCPのSkills（/max-synth等）を使用してください。
+    """Search Max/MSP patch design patterns by intent. Returns object combinations and connection templates. Use during design phase for brainstorming. For actual patch building, use MaxMCP Skills (/max-synth, etc.).
+    やりたいことからMax/MSPパッチの設計パターンを検索。使用オブジェクトと接続構成のテンプレートを返す。
 
     Args:
-        query: やりたいこと（例: "シンセサイザーを作りたい", "delay effect", "ビデオ再生"）
-        domain: ドメインフィルター（"max", "msp", "jitter"）
-        max_results: 最大結果数（デフォルト5）
+        query: What you want to do / やりたいこと (e.g. "build a synthesizer", "delay effect", "video playback")
+        domain: Domain filter / ドメインフィルター ("max", "msp", "jitter")
+        max_results: Maximum number of results / 最大結果数 (default: 5)
     """
     return search_patterns(query, domain=domain, max_results=max_results)
 
@@ -89,11 +95,12 @@ def search_pattern(
 @mcp.tool(name="maxref.search_package")
 @track("maxref.search_package")
 def search_package(query: str, max_results: int = 5) -> dict:
-    """Max/MSPの外部パッケージ・ライブラリのリファレンスを検索。機能比較、対応バージョンなど選定に必要な情報を提供。
+    """Search Max/MSP external packages and libraries. Provides feature comparison, version compatibility, and selection info.
+    Max/MSPの外部パッケージ・ライブラリのリファレンスを検索。機能比較、対応バージョンなど選定に必要な情報を提供。
 
     Args:
-        query: 検索キーワード（例: "spatial audio", "コンピュータビジョン", "BEAP"）
-        max_results: 最大結果数（デフォルト5）
+        query: Search keyword / 検索キーワード (e.g. "spatial audio", "computer vision", "BEAP")
+        max_results: Maximum number of results / 最大結果数 (default: 5)
     """
     return search_packages(query, max_results=max_results)
 
@@ -101,27 +108,29 @@ def search_package(query: str, max_results: int = 5) -> dict:
 @mcp.tool(name="maxref.glossary")
 @track("maxref.glossary")
 def glossary(term: str) -> dict:
-    """Max/MSP関連用語の日英対応辞書。DSP、シグナルフロー、Max固有の概念を初学者にもわかりやすく解説。
+    """Japanese-English glossary for Max/MSP terminology. Explains DSP, signal flow, and Max-specific concepts in beginner-friendly language.
+    Max/MSP関連用語の日英対応辞書。DSP、シグナルフロー、Max固有の概念を初学者にもわかりやすく解説。
 
     Args:
-        term: 調べたい用語（例: "signal", "シグナル", "bang", "パッチコード"）
+        term: Term to look up / 調べたい用語 (e.g. "signal", "bang", "patch cord")
     """
     result = lookup_glossary(term)
     if result is None:
-        return {"error": f"用語 '{term}' が見つかりません。別の表現で検索してみてください。"}
+        return {"error": f"Term '{term}' not found. Try a different expression. / 用語 '{term}' が見つかりません。別の表現で検索してみてください。"}
     return result
 
 
-# --- 設計相談 ---
+# --- Design Consultation / 設計相談 ---
 
 
 @mcp.tool(name="maxref.compare_objects")
 @track("maxref.compare_objects")
 def compare_objects(objects: list[str]) -> dict:
-    """2つ以上のMax/MSPオブジェクトを比較。用途の違い、インレット/アウトレット構成、ドメイン、RNBO互換性などを並べて解説。設計時のオブジェクト選定に使用。
+    """Compare 2-5 Max/MSP objects side by side. Shows differences in usage, inlet/outlet configuration, domain, and RNBO compatibility. Use for object selection during design.
+    2つ以上のMax/MSPオブジェクトを比較。用途の違い、インレット/アウトレット構成、ドメイン、RNBO互換性などを並べて解説。
 
     Args:
-        objects: 比較するオブジェクト名のリスト（2〜5個。例: ["cycle~", "phasor~"] や ["groove~", "play~", "wave~"]）
+        objects: List of object names to compare (2-5) / 比較するオブジェクト名のリスト（2〜5個。例: ["cycle~", "phasor~"]）
     """
     return compare_objects_detail(objects)
 
@@ -132,11 +141,12 @@ def suggest_approach(
     goal: str,
     constraints: list[str] | None = None,
 ) -> dict:
-    """やりたいことに対して複数の実装アプローチを提案し、それぞれのメリット・デメリットを解説。設計の壁打ち相手として使用。
+    """Suggest multiple implementation approaches for a goal, with pros and cons for each. Use as a design brainstorming partner.
+    やりたいことに対して複数の実装アプローチを提案し、それぞれのメリット・デメリットを解説。設計の壁打ち相手として使用。
 
     Args:
-        goal: 実現したいこと（例: "音声入力に反応する映像を作りたい", "ポリフォニックシンセを作りたい"）
-        constraints: 制約条件のリスト（例: ["RNBO互換", "CPU負荷を抑えたい", "Max for Live用"]）
+        goal: What you want to achieve / 実現したいこと (e.g. "build a polyphonic synth", "audio-reactive visuals")
+        constraints: List of constraints / 制約条件のリスト (e.g. ["RNBO compatible", "low CPU", "Max for Live"])
     """
     return suggest_approaches(goal, constraints=constraints)
 
@@ -144,11 +154,12 @@ def suggest_approach(
 @mcp.tool(name="maxref.explain_connection")
 @track("maxref.explain_connection")
 def explain_connection(source: str, destination: str) -> dict:
-    """2つのオブジェクト間の接続方法と信号フローを解説。どのアウトレットからどのインレットに接続すべきか、型の互換性を確認。
+    """Explain connection method and signal flow between two objects. Shows which outlet connects to which inlet and checks type compatibility.
+    2つのオブジェクト間の接続方法と信号フローを解説。どのアウトレットからどのインレットに接続すべきか、型の互換性を確認。
 
     Args:
-        source: 接続元オブジェクト名（例: "cycle~"）
-        destination: 接続先オブジェクト名（例: "ezdac~"）
+        source: Source object name / 接続元オブジェクト名 (e.g. "cycle~")
+        destination: Destination object name / 接続先オブジェクト名 (e.g. "ezdac~")
     """
     return explain_connection_detail(source, destination)
 
@@ -156,15 +167,16 @@ def explain_connection(source: str, destination: str) -> dict:
 @mcp.tool(name="maxref.rnbo_compatibility")
 @track("maxref.rnbo_compatibility")
 def rnbo_compatibility(objects: list[str]) -> dict:
-    """指定オブジェクトがRNBOに対応しているか確認。非対応の場合は代替オブジェクトを提案。RNBOエクスポート前の事前チェックに使用。
+    """Check if objects are RNBO compatible. Suggests alternatives for incompatible objects. Use before RNBO export.
+    指定オブジェクトがRNBOに対応しているか確認。非対応の場合は代替オブジェクトを提案。RNBOエクスポート前の事前チェックに使用。
 
     Args:
-        objects: チェックするオブジェクト名のリスト（例: ["cycle~", "groove~", "js"]）
+        objects: List of object names to check / チェックするオブジェクト名のリスト (e.g. ["cycle~", "groove~", "js"])
     """
     return check_rnbo_compatibility(objects)
 
 
-# --- フィードバック ---
+# --- Feedback / フィードバック ---
 
 
 @mcp.tool(name="maxref.report_bug")
@@ -177,15 +189,16 @@ def report_bug(
     actual: str | None = None,
     target_repo: str | None = None,
 ) -> dict:
-    """MaxMCP / MaxRefMCP のバグを報告してGitHub Issueを自動作成。内容に基づいて適切なリポジトリに自動振り分け。パッチ構築・操作系のバグはMaxMCPへ、リファレンス・検索系のバグはMaxRefMCPへ振り分けられる。
+    """Report a bug and auto-create a GitHub Issue. Automatically routes to the appropriate repo: patch building/control bugs go to MaxMCP, reference/search bugs go to MaxRefMCP.
+    MaxMCP / MaxRefMCP のバグを報告してGitHub Issueを自動作成。内容に基づいて適切なリポジトリに自動振り分け。
 
     Args:
-        title: バグの概要（例: "cycle~ の検索結果にsaw~が含まれない"）
-        description: バグの詳細説明
-        steps_to_reproduce: 再現手順（任意）
-        expected: 期待される動作（任意）
-        actual: 実際の動作（任意）
-        target_repo: 振り分け先を明示指定する場合（"maxmcp" または "maxrefmcp"。省略時は自動判定）
+        title: Bug summary / バグの概要
+        description: Detailed description / バグの詳細説明
+        steps_to_reproduce: Steps to reproduce (optional) / 再現手順（任意）
+        expected: Expected behavior (optional) / 期待される動作（任意）
+        actual: Actual behavior (optional) / 実際の動作（任意）
+        target_repo: Explicit target ("maxmcp" or "maxrefmcp", auto-detected if omitted) / 振り分け先（省略時は自動判定）
     """
     return create_bug_report(
         title=title,
@@ -205,13 +218,14 @@ def request_feature(
     use_case: str | None = None,
     target_repo: str | None = None,
 ) -> dict:
-    """MaxMCP / MaxRefMCP への機能追加リクエストをGitHub Issueとして自動作成。内容に基づいて適切なリポジトリに自動振り分け。パッチ構築・操作系はMaxMCPへ、リファレンス・検索系はMaxRefMCPへ振り分けられる。
+    """Request a new feature and auto-create a GitHub Issue. Automatically routes to the appropriate repo based on content.
+    MaxMCP / MaxRefMCP への機能追加リクエストをGitHub Issueとして自動作成。内容に基づいて適切なリポジトリに自動振り分け。
 
     Args:
-        title: 機能の概要（例: "グリッチエフェクトのパターンを追加してほしい"）
-        description: 機能の詳細説明
-        use_case: ユースケース・利用場面（任意）
-        target_repo: 振り分け先を明示指定する場合（"maxmcp" または "maxrefmcp"。省略時は自動判定）
+        title: Feature summary / 機能の概要
+        description: Detailed description / 機能の詳細説明
+        use_case: Use case (optional) / ユースケース・利用場面（任意）
+        target_repo: Explicit target ("maxmcp" or "maxrefmcp", auto-detected if omitted) / 振り分け先（省略時は自動判定）
     """
     return create_feature_request(
         title=title,
@@ -221,16 +235,17 @@ def request_feature(
     )
 
 
-# --- 公式ニュース ---
+# --- Official News / 公式ニュース ---
 
 
 @mcp.tool(name="maxref.official_news")
 @track("maxref.official_news")
 def official_news(max_results: int = 5) -> dict:
-    """Cycling '74 公式サイトから最新の記事・ニュースを取得。新機能、アップデート、コミュニティ情報を確認できる。
+    """Fetch latest articles and news from the official Cycling '74 website. Check new features, updates, and community info.
+    Cycling '74 公式サイトから最新の記事・ニュースを取得。新機能、アップデート、コミュニティ情報を確認できる。
 
     Args:
-        max_results: 取得する記事数（デフォルト5）
+        max_results: Number of articles to fetch / 取得する記事数 (default: 5)
     """
     return fetch_official_news(max_results=max_results)
 
@@ -238,10 +253,11 @@ def official_news(max_results: int = 5) -> dict:
 @mcp.tool(name="maxref.rnbo_news")
 @track("maxref.rnbo_news")
 def rnbo_news(max_results: int = 5) -> dict:
-    """RNBO 関連の最新情報を取得。Move Takeover、エクスポートターゲット、新機能などの最新動向を確認。
+    """Fetch latest RNBO-related information. Check Move Takeover, export targets, new features, and latest developments.
+    RNBO 関連の最新情報を取得。Move Takeover、エクスポートターゲット、新機能などの最新動向を確認。
 
     Args:
-        max_results: 取得するセクション数（デフォルト5）
+        max_results: Number of sections to fetch / 取得するセクション数 (default: 5)
     """
     return fetch_rnbo_news(max_results=max_results)
 
@@ -249,28 +265,30 @@ def rnbo_news(max_results: int = 5) -> dict:
 @mcp.tool(name="maxref.read_article")
 @track("maxref.read_article")
 def read_article(url: str) -> dict:
-    """Cycling '74 公式サイトの記事を読み込み、内容を取得する。maxref.official_news で取得した記事URLを指定して詳細を確認。
+    """Read and fetch content from a Cycling '74 article. Use with URLs obtained from maxref.official_news.
+    Cycling '74 公式サイトの記事を読み込み、内容を取得する。maxref.official_news で取得した記事URLを指定して詳細を確認。
 
     Args:
-        url: cycling74.com の記事URL
+        url: Article URL from cycling74.com / cycling74.com の記事URL
     """
     return fetch_article_detail(url)
 
 
-# --- アナリティクス ---
+# --- Analytics / アナリティクス ---
 
 
 @mcp.tool(name="maxref.analytics")
 def analytics(days: int = 30) -> dict:
-    """MaxRefMCP の API 利用状況サマリーを取得。ツール別呼び出し数、応答時間、人気検索クエリ、日別推移などを返す。
+    """Get MaxRefMCP API usage summary. Shows per-tool call counts, response times, popular queries, and daily trends.
+    MaxRefMCP の API 利用状況サマリーを取得。ツール別呼び出し数、応答時間、人気検索クエリ、日別推移などを返す。
 
     Args:
-        days: 集計期間（日数。デフォルト30）
+        days: Aggregation period in days / 集計期間・日数 (default: 30)
     """
     return get_summary(days)
 
 
-# --- ダッシュボード用 HTTP ルート ---
+# --- Dashboard HTTP Routes ---
 
 from starlette.requests import Request
 from starlette.responses import HTMLResponse, JSONResponse
