@@ -1225,6 +1225,340 @@
     "rnbo_compatible": false,
     "size": {"width": 40, "height": 140}
   },
+  "live.path": {
+    "domain": "max",
+    "category": "scripting",
+    "description": "Navigate the Live Object Model (LOM) hierarchy. Outputs object ID for use with live.object/live.observer/live.remote~",
+    "description_ja": "Live Object Model (LOM) の階層をナビゲート。goto メッセージでパスを指定し、オブジェクト ID を出力する",
+    "inlets": [
+      {"type": "message", "description": "goto <path> to navigate (e.g. goto live_set tracks 0 clip_slots 2 clip)"},
+      {"type": "message", "description": "id <num> to set object directly"}
+    ],
+    "outlets": [
+      {"type": "message", "description": "id <num> — resolved object ID (connect to live.object/live.observer right inlet)"},
+      {"type": "message", "description": "type <name> — object type name"},
+      {"type": "message", "description": "path <string> — resolved path string"}
+    ],
+    "related": ["live.object", "live.observer", "live.remote~", "live.thisdevice"],
+    "tags": ["Live", "M4L", "LOM", "API", "path", "navigation", "Ableton"],
+    "tags_ja": ["Live", "M4L", "LOM", "API", "パス", "ナビゲーション", "Ableton"],
+    "rnbo_compatible": false,
+    "size": {"width": 120, "height": 22}
+  },
+  "live.object": {
+    "domain": "max",
+    "category": "scripting",
+    "description": "Get/set properties and call methods on Live objects. Receives object ID from live.path",
+    "description_ja": "Live オブジェクトのプロパティ取得・設定・メソッド呼び出し。live.path から ID を受け取って操作する",
+    "inlets": [
+      {"type": "message", "description": "get/set/call messages (e.g. get name, set tempo 140, call fire)"},
+      {"type": "int", "description": "id — object ID from live.path"}
+    ],
+    "outlets": [
+      {"type": "message", "description": "Property values and method results"},
+      {"type": "message", "description": "Object info (getinfo output)"}
+    ],
+    "related": ["live.path", "live.observer", "live.remote~"],
+    "tags": ["Live", "M4L", "LOM", "API", "property", "method", "Ableton", "clip", "track", "device"],
+    "tags_ja": ["Live", "M4L", "LOM", "API", "プロパティ", "メソッド", "Ableton", "クリップ", "トラック", "デバイス"],
+    "rnbo_compatible": false,
+    "size": {"width": 120, "height": 22}
+  },
+  "live.observer": {
+    "domain": "max",
+    "category": "scripting",
+    "description": "Observe property changes on Live objects in real-time. Outputs new values when properties change",
+    "description_ja": "Live オブジェクトのプロパティ変更をリアルタイム監視。値が変わるたびに自動出力する",
+    "inlets": [
+      {"type": "message", "description": "property <name> — set property to observe. bang outputs current value"},
+      {"type": "int", "description": "id — object ID from live.path"}
+    ],
+    "outlets": [
+      {"type": "message", "description": "Property value when changed (or on bang)"},
+      {"type": "message", "description": "Property name and type info"}
+    ],
+    "related": ["live.path", "live.object", "deferlow"],
+    "tags": ["Live", "M4L", "LOM", "API", "observer", "watch", "callback", "Ableton", "notification"],
+    "tags_ja": ["Live", "M4L", "LOM", "API", "監視", "コールバック", "通知", "Ableton"],
+    "rnbo_compatible": false,
+    "size": {"width": 120, "height": 22}
+  },
+  "live.remote~": {
+    "domain": "msp",
+    "category": "control",
+    "description": "Control Live device parameters at audio rate. Signal input (0.0-1.0) is mapped to parameter range",
+    "description_ja": "Live デバイスパラメーターをオーディオレートで制御。0.0〜1.0 の信号入力がパラメーター範囲にマッピングされる",
+    "inlets": [
+      {"type": "signal", "description": "Control signal (0.0-1.0, mapped to parameter min-max)"},
+      {"type": "int", "description": "id — DeviceParameter ID from live.path"}
+    ],
+    "outlets": [],
+    "related": ["live.path", "live.object", "live.observer"],
+    "tags": ["Live", "M4L", "LOM", "API", "remote", "audio rate", "parameter", "Ableton", "automation"],
+    "tags_ja": ["Live", "M4L", "LOM", "API", "リモート", "オーディオレート", "パラメーター", "Ableton", "オートメーション"],
+    "rnbo_compatible": false,
+    "size": {"width": 120, "height": 22}
+  },
+  "live.thisdevice": {
+    "domain": "max",
+    "category": "scripting",
+    "description": "Reference to the Max for Live device itself. Outputs bang when Live API is initialized (use instead of loadbang)",
+    "description_ja": "Max for Live デバイス自身への参照。Live API 初期化完了時に bang を出力（loadbang の代わりに使用必須）",
+    "inlets": [],
+    "outlets": [
+      {"type": "bang", "description": "Bang when Live API is ready (connect to live.path goto)"},
+      {"type": "int", "description": "1 when device is enabled, 0 when bypassed"}
+    ],
+    "related": ["live.path", "live.object", "loadbang"],
+    "tags": ["Live", "M4L", "LOM", "API", "init", "device", "Ableton", "initialization"],
+    "tags_ja": ["Live", "M4L", "LOM", "API", "初期化", "デバイス", "Ableton"],
+    "rnbo_compatible": false,
+    "size": {"width": 120, "height": 22}
+  },
+  "live.numbox": {
+    "domain": "max",
+    "category": "ui",
+    "description": "Ableton Live style number box with label and unit display",
+    "description_ja": "ラベルと単位表示付き Ableton Live スタイルの数値ボックス",
+    "inlets": [
+      {"type": "float", "description": "Set value"}
+    ],
+    "outlets": [
+      {"type": "float", "description": "Current value"}
+    ],
+    "related": ["number", "flonum", "live.dial", "live.slider"],
+    "tags": ["number", "Live", "control", "UI", "M4L"],
+    "tags_ja": ["数値", "Live", "コントロール", "M4L"],
+    "rnbo_compatible": false,
+    "size": {"width": 60, "height": 22}
+  },
+  "live.menu": {
+    "domain": "max",
+    "category": "ui",
+    "description": "Ableton Live style pop-up menu for selecting from a list of items",
+    "description_ja": "Ableton Live スタイルのポップアップメニュー",
+    "inlets": [
+      {"type": "int", "description": "Set selected index"}
+    ],
+    "outlets": [
+      {"type": "int", "description": "Selected item index"},
+      {"type": "symbol", "description": "Selected item text"}
+    ],
+    "related": ["umenu", "live.tab", "live.text"],
+    "tags": ["menu", "Live", "control", "UI", "M4L", "dropdown"],
+    "tags_ja": ["メニュー", "Live", "コントロール", "M4L", "ドロップダウン"],
+    "rnbo_compatible": false,
+    "size": {"width": 100, "height": 22}
+  },
+  "live.text": {
+    "domain": "max",
+    "category": "ui",
+    "description": "Ableton Live style button/toggle with text label. Can be momentary or toggle mode",
+    "description_ja": "テキストラベル付き Ableton Live スタイルのボタン/トグル。モーメンタリまたはトグルモード",
+    "inlets": [
+      {"type": "int", "description": "Set state (0/1)"}
+    ],
+    "outlets": [
+      {"type": "int", "description": "Current state (0/1)"}
+    ],
+    "related": ["live.tab", "live.menu", "textbutton", "toggle"],
+    "tags": ["button", "toggle", "text", "Live", "UI", "M4L"],
+    "tags_ja": ["ボタン", "トグル", "テキスト", "Live", "M4L"],
+    "rnbo_compatible": false,
+    "size": {"width": 60, "height": 22}
+  },
+  "live.tab": {
+    "domain": "max",
+    "category": "ui",
+    "description": "Ableton Live style tab selector for switching between options",
+    "description_ja": "Ableton Live スタイルのタブセレクター",
+    "inlets": [
+      {"type": "int", "description": "Set selected tab index"}
+    ],
+    "outlets": [
+      {"type": "int", "description": "Selected tab index"},
+      {"type": "symbol", "description": "Selected tab label"}
+    ],
+    "related": ["live.menu", "live.text", "tab"],
+    "tags": ["tab", "Live", "control", "UI", "M4L", "selector"],
+    "tags_ja": ["タブ", "Live", "コントロール", "M4L", "セレクター"],
+    "rnbo_compatible": false,
+    "size": {"width": 200, "height": 22}
+  },
+  "live.gain~": {
+    "domain": "msp",
+    "category": "math",
+    "description": "Ableton Live style gain slider with dB display. Automatable in Live",
+    "description_ja": "dB表示付き Ableton Live スタイルのゲインスライダー。Live でオートメーション可能",
+    "inlets": [
+      {"type": "signal", "description": "Audio signal input"},
+      {"type": "float", "description": "Gain value"}
+    ],
+    "outlets": [
+      {"type": "signal", "description": "Scaled audio signal"},
+      {"type": "float", "description": "Current gain value (dB)"}
+    ],
+    "related": ["gain~", "live.meter~", "live.slider"],
+    "tags": ["gain", "volume", "Live", "M4L", "audio", "dB"],
+    "tags_ja": ["ゲイン", "音量", "Live", "M4L", "オーディオ"],
+    "rnbo_compatible": false,
+    "size": {"width": 40, "height": 140}
+  },
+  "live.meter~": {
+    "domain": "msp",
+    "category": "ui",
+    "description": "Ableton Live style LED level meter for audio signals",
+    "description_ja": "Ableton Live スタイルの LED レベルメーター",
+    "inlets": [
+      {"type": "signal", "description": "Audio signal to meter"}
+    ],
+    "outlets": [],
+    "related": ["meter~", "live.gain~", "live.scope~"],
+    "tags": ["meter", "level", "Live", "M4L", "audio", "display"],
+    "tags_ja": ["メーター", "レベル", "Live", "M4L", "オーディオ", "表示"],
+    "rnbo_compatible": false,
+    "size": {"width": 18, "height": 100}
+  },
+  "live.scope~": {
+    "domain": "msp",
+    "category": "ui",
+    "description": "Ableton Live style oscilloscope display for audio signals",
+    "description_ja": "Ableton Live スタイルのオシロスコープ表示",
+    "inlets": [
+      {"type": "signal", "description": "Audio signal to display"}
+    ],
+    "outlets": [],
+    "related": ["scope~", "spectroscope~", "live.meter~"],
+    "tags": ["scope", "oscilloscope", "Live", "M4L", "audio", "display", "waveform"],
+    "tags_ja": ["スコープ", "オシロスコープ", "Live", "M4L", "波形", "表示"],
+    "rnbo_compatible": false,
+    "size": {"width": 140, "height": 80}
+  },
+  "live.grid": {
+    "domain": "max",
+    "category": "ui",
+    "description": "Ableton Live style grid/matrix of toggleable cells for step sequencing",
+    "description_ja": "ステップシーケンス用の Ableton Live スタイルのトグル可能なグリッドUI",
+    "inlets": [
+      {"type": "message", "description": "Set cell states, directions, and display messages"}
+    ],
+    "outlets": [
+      {"type": "list", "description": "Column data when cells change"},
+      {"type": "int", "description": "Current step position"}
+    ],
+    "related": ["live.step", "matrixctrl", "multislider"],
+    "tags": ["grid", "matrix", "sequencer", "Live", "UI", "M4L", "step"],
+    "tags_ja": ["グリッド", "マトリクス", "シーケンサー", "Live", "M4L", "ステップ"],
+    "rnbo_compatible": false,
+    "size": {"width": 260, "height": 80}
+  },
+  "live.step": {
+    "domain": "max",
+    "category": "ui",
+    "description": "Ableton Live style step sequencer with per-step pitch, velocity, duration, and extra values",
+    "description_ja": "ピッチ・ベロシティ・デュレーション等をステップごとに設定できる Live スタイルのステップシーケンサー",
+    "inlets": [
+      {"type": "message", "description": "Sequence data, step messages, and display control"}
+    ],
+    "outlets": [
+      {"type": "list", "description": "Step data (pitch, velocity, duration, extra)"},
+      {"type": "int", "description": "Current step index"},
+      {"type": "int", "description": "Number of steps"}
+    ],
+    "related": ["live.grid", "seq~", "detonate"],
+    "tags": ["step", "sequencer", "Live", "UI", "M4L", "MIDI", "pattern"],
+    "tags_ja": ["ステップ", "シーケンサー", "Live", "M4L", "MIDI", "パターン"],
+    "rnbo_compatible": false,
+    "size": {"width": 320, "height": 100}
+  },
+  "live.arrows": {
+    "domain": "max",
+    "category": "ui",
+    "description": "Ableton Live style arrow buttons for increment/decrement navigation",
+    "description_ja": "Ableton Live スタイルの矢印ボタン（インクリメント/デクリメント）",
+    "inlets": [
+      {"type": "int", "description": "Set current value"}
+    ],
+    "outlets": [
+      {"type": "int", "description": "Arrow direction (-1 down/left, 1 up/right)"}
+    ],
+    "related": ["live.text", "live.tab", "live.numbox"],
+    "tags": ["arrows", "navigation", "Live", "UI", "M4L"],
+    "tags_ja": ["矢印", "ナビゲーション", "Live", "M4L"],
+    "rnbo_compatible": false,
+    "size": {"width": 40, "height": 22}
+  },
+  "live.banks": {
+    "domain": "max",
+    "category": "ui",
+    "description": "Ableton Live style bank selector for switching between parameter banks",
+    "description_ja": "パラメーターバンク切り替え用の Ableton Live スタイルバンクセレクター",
+    "inlets": [
+      {"type": "int", "description": "Set bank index"}
+    ],
+    "outlets": [
+      {"type": "int", "description": "Selected bank index"},
+      {"type": "list", "description": "Bank parameter names"}
+    ],
+    "related": ["live.tab", "live.menu", "live.text"],
+    "tags": ["banks", "selector", "Live", "UI", "M4L", "parameter"],
+    "tags_ja": ["バンク", "セレクター", "Live", "M4L", "パラメーター"],
+    "rnbo_compatible": false,
+    "size": {"width": 200, "height": 22}
+  },
+  "live.drop": {
+    "domain": "max",
+    "category": "ui",
+    "description": "Ableton Live style drag-and-drop target for files and Live clips",
+    "description_ja": "ファイルや Live クリップのドラッグ&ドロップターゲット",
+    "inlets": [],
+    "outlets": [
+      {"type": "symbol", "description": "Dropped file path or clip reference"}
+    ],
+    "related": ["dropfile", "live.text"],
+    "tags": ["drop", "drag", "file", "Live", "UI", "M4L"],
+    "tags_ja": ["ドロップ", "ドラッグ", "ファイル", "Live", "M4L"],
+    "rnbo_compatible": false,
+    "size": {"width": 100, "height": 40}
+  },
+  "plugsync~": {
+    "domain": "msp",
+    "category": "timing",
+    "description": "Synchronize with host DAW transport. Outputs tempo, time signature, and transport state",
+    "description_ja": "ホスト DAW のトランスポートに同期。テンポ・拍子・再生状態を出力",
+    "inlets": [],
+    "outlets": [
+      {"type": "signal", "description": "Transport state (0=stopped, 1=playing)"},
+      {"type": "signal", "description": "Current beat position"},
+      {"type": "float", "description": "Tempo (BPM)"},
+      {"type": "int", "description": "Time signature numerator"},
+      {"type": "int", "description": "Time signature denominator"}
+    ],
+    "related": ["transport", "live.thisdevice", "metro"],
+    "tags": ["sync", "transport", "DAW", "tempo", "M4L", "Live", "plugin"],
+    "tags_ja": ["同期", "トランスポート", "DAW", "テンポ", "M4L", "Live", "プラグイン"],
+    "rnbo_compatible": false,
+    "size": {"width": 100, "height": 22}
+  },
+  "amxd~": {
+    "domain": "msp",
+    "category": "plugin",
+    "description": "Host a Max for Live device (.amxd) inside a Max patch. Audio input/output supported",
+    "description_ja": "Max パッチ内で Max for Live デバイス (.amxd) をホスト。オーディオ入出力対応",
+    "inlets": [
+      {"type": "signal", "description": "Audio input channel 1"},
+      {"type": "signal", "description": "Audio input channel 2"}
+    ],
+    "outlets": [
+      {"type": "signal", "description": "Audio output channel 1"},
+      {"type": "signal", "description": "Audio output channel 2"}
+    ],
+    "related": ["vst~", "poly~", "live.thisdevice"],
+    "tags": ["M4L", "Live", "device", "host", "amxd", "plugin", "Ableton"],
+    "tags_ja": ["M4L", "Live", "デバイス", "ホスト", "プラグイン", "Ableton"],
+    "rnbo_compatible": false,
+    "size": {"width": 120, "height": 22}
+  },
   "number": {
     "domain": "max",
     "category": "ui",
